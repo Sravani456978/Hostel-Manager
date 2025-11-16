@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -50,11 +51,18 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
     implementation("androidx.navigation:navigation-compose:2.8.0")
     implementation("androidx.room:room-runtime:2.7.0-alpha05")
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
+    implementation(libs.firebase.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
+    implementation(libs.firebase.firestore)
     kapt("androidx.room:room-compiler:2.7.0-alpha05")
     implementation("androidx.room:room-ktx:2.7.0-alpha05")
     implementation("io.coil-kt:coil-compose:2.7.0")
     implementation("com.google.dagger:hilt-android:2.57.1")
     kapt("com.google.dagger:hilt-compiler:2.57.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

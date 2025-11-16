@@ -3,6 +3,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import uk.ac.tees.mad.hostelmanager.presentation.auth.AuthScreen
 import uk.ac.tees.mad.hostelmanager.presentation.splash.SplashScreen
 
 sealed class Screen(val route: String) {
@@ -26,8 +27,10 @@ fun AppNavGraph(navController: NavHostController) {
             SplashScreen(navController = navController)
         }
 
+        composable(Screen.Auth.route) {
+            AuthScreen(navController)
+        }
         /*
-        composable(Screen.Auth.route) { AuthScreen(navController) }
         composable(Screen.Menu.route) { MessMenuScreen(navController) }
         composable(Screen.FileComplaint.route) { FileComplaintScreen(navController) }
         composable(Screen.ComplaintStatus.route) { ComplaintStatusScreen(navController) }

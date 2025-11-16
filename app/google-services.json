@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "240112296671",
+    "project_id": "hostel-manager-70b47",
+    "storage_bucket": "hostel-manager-70b47.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:240112296671:android:7c6000fe7cb5fc7a18bf6a",
+        "android_client_info": {
+          "package_name": "uk.ac.tees.mad.hostelmanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "240112296671-tr9b4i03s658bb9bm0dq244c43fgusl9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "uk.ac.tees.mad.hostelmanager",
+            "certificate_hash": "ed01cbba081b0aa35fa5e68bd87c1c0139c05607"
+          }
+        },
+        {
+          "client_id": "240112296671-jchm8elqacfo99etoa906bapnq75a5cf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBX-WcJ7_sTUf1UcCCbc8AE1LBnKsUSwsg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "240112296671-jchm8elqacfo99etoa906bapnq75a5cf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
