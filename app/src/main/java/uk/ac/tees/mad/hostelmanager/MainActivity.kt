@@ -46,7 +46,10 @@ class MainActivity : ComponentActivity() {
                 navController = rememberNavController()
                 authViewModel = viewModel()
 
-                AppNavGraph(navController = navController)
+                AppNavGraph(
+                    navController = navController,
+                    onGoogleSignInClick = { startGoogleSignIn() }
+                )
             }
         }
     }

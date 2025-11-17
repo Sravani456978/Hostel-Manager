@@ -4,6 +4,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import uk.ac.tees.mad.hostelmanager.presentation.auth.AuthScreen
+import uk.ac.tees.mad.hostelmanager.presentation.menu.MessMenuScreen
 import uk.ac.tees.mad.hostelmanager.presentation.splash.SplashScreen
 
 sealed class Screen(val route: String) {
@@ -18,7 +19,7 @@ sealed class Screen(val route: String) {
 }
 
 @Composable
-fun AppNavGraph(navController: NavHostController) {
+fun AppNavGraph(navController: NavHostController, onGoogleSignInClick: () -> Unit) {
     NavHost(
         navController = navController,
         startDestination = Screen.Splash.route
@@ -28,15 +29,20 @@ fun AppNavGraph(navController: NavHostController) {
         }
 
         composable(Screen.Auth.route) {
-            AuthScreen(navController)
+            AuthScreen(
+                navController = navController,
+                onGoogleSignInClick = { onGoogleSignInClick() }
+            )
         }
-        /*
+
+
         composable(Screen.Menu.route) { MessMenuScreen(navController) }
-        composable(Screen.FileComplaint.route) { FileComplaintScreen(navController) }
-        composable(Screen.ComplaintStatus.route) { ComplaintStatusScreen(navController) }
-        composable(Screen.MyComplaints.route) { MyComplaintsScreen(navController) }
-        composable(Screen.Rules.route) { HostelRulesScreen(navController) }
-        composable(Screen.Profile.route) { ProfileScreen(navController) }
-        */
+        /*
+       composable(Screen.FileComplaint.route) { FileComplaintScreen(navController) }
+       composable(Screen.ComplaintStatus.route) { ComplaintStatusScreen(navController) }
+       composable(Screen.MyComplaints.route) { MyComplaintsScreen(navController) }
+       composable(Screen.Rules.route) { HostelRulesScreen(navController) }
+       composable(Screen.Profile.route) { ProfileScreen(navController) }
+       */
     }
 }
