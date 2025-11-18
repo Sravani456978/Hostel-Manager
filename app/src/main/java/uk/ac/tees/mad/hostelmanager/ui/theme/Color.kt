@@ -12,6 +12,9 @@ val BackgroundColor = Color(0xFFF8F9FA) // Almost white background
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
+val PrimaryBlue = Color(0xFF3F51B5)
+val LightBlue = Color(0xFF2196F3)
+val AccentOrange = Color(0xFFFF9800)
 
 val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
