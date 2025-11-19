@@ -25,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import uk.ac.tees.mad.hostelmanager.R
 import uk.ac.tees.mad.hostelmanager.ui.theme.*
@@ -82,7 +83,8 @@ private val sampleMenu = listOf(
 )
 
 @Composable
-fun MessMenuScreen(navController: NavController) {
+fun MessMenuScreen(navController: NavController,
+                   viewModel: MenuViewModel = hiltViewModel()) {
     Column(
         modifier = Modifier
             .fillMaxSize()
