@@ -43,7 +43,9 @@ android {
 }
 
 dependencies {
-
+    implementation("com.cloudinary:cloudinary-android:3.1.1")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.google.code.gson:gson:2.8.8")
     implementation("io.ktor:ktor-client-okhttp:2.3.3")
     implementation("androidx.compose.material3:material3:1.3.2")

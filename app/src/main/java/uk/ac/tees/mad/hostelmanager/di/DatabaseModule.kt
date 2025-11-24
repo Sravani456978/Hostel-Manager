@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import uk.ac.tees.mad.hostelmanager.data.local.room.AppDatabase
+import uk.ac.tees.mad.hostelmanager.data.local.room.ComplaintDao
 import uk.ac.tees.mad.hostelmanager.data.local.room.MealDao
 import javax.inject.Singleton
 
@@ -17,8 +18,11 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideDatabase(app: Application): AppDatabase =
-        Room.databaseBuilder(app, AppDatabase::class.java, "app_db").build()
+        Room.databaseBuilder(app, AppDatabase::class.java, "app_db").fallbackToDestructiveMigration().build()
 
     @Provides
     fun provideMealDao(db: AppDatabase): MealDao = db.mealDao()
+
+    @Provides
+    fun provideComplaintDao(db: AppDatabase): ComplaintDao = db.complaintDao()
 }

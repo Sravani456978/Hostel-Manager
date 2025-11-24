@@ -4,7 +4,9 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import uk.ac.tees.mad.hostelmanager.data.repository.ComplaintRepositoryImpl
 import uk.ac.tees.mad.hostelmanager.data.repository.MenuRepositoryImpl
+import uk.ac.tees.mad.hostelmanager.domain.repository.ComplaintRepository
 import uk.ac.tees.mad.hostelmanager.domain.repository.MenuRepository
 
 @Module
@@ -15,4 +17,9 @@ abstract class RepositoryModule {
     abstract fun bindMenuRepository(
         impl: MenuRepositoryImpl
     ): MenuRepository
+
+    @Binds
+    abstract fun bindComplaintRepository(
+        impl: ComplaintRepositoryImpl
+    ): ComplaintRepository
 }

@@ -35,27 +35,16 @@ class MenuViewModel @Inject constructor(
             val isOnline = NetworkUtils.isOnline(getApplication())
 
             try {
-                // Sync with Firebase if online
+                // If device have internet then launch the sync this will store the data in room
                 if (isOnline) repository.syncMeals(true)
 
                 // Always collect from Room
                 repository.getMeals().collect { localMeals ->
-                    // Preserve weekday order
                     _meals.value = localMeals.sortedBy { order.indexOf(it.day) }
                 }
 
             } catch (e: Exception) {
                 Log.e("MenuViewModel", "Error fetching meals: ${e.message}", e)
-            }
-        }
-    }
-
-    fun syncMeals(isOnline: Boolean) {
-        viewModelScope.launch {
-            try {
-                repository.syncMeals(isOnline)
-            } catch (e: Exception) {
-                Log.e("MenuViewModel", "Error syncing meals: ${e.message}", e)
             }
         }
     }

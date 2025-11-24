@@ -1,5 +1,6 @@
 package uk.ac.tees.mad.hostelmanager.presentation.auth
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import uk.ac.tees.mad.hostelmanager.R
+import uk.ac.tees.mad.hostelmanager.utils.NetworkUtils
 
 @Composable
 fun AuthScreen(
@@ -51,7 +53,8 @@ fun AuthScreen(
             Spacer(modifier = Modifier.height(48.dp))
 
             Button(
-                onClick = { onGoogleSignInClick() },
+                onClick = {
+                    onGoogleSignInClick() },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                 shape = RoundedCornerShape(50),
                 modifier = Modifier

@@ -1,0 +1,32 @@
+package uk.ac.tees.mad.hostelmanager.data.repository
+
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.tasks.await
+import uk.ac.tees.mad.hostelmanager.data.local.room.ComplaintDao
+import uk.ac.tees.mad.hostelmanager.data.local.room.ComplaintEntity
+import uk.ac.tees.mad.hostelmanager.data.remote.ComplaintRemote
+import uk.ac.tees.mad.hostelmanager.domain.repository.ComplaintRepository
+import javax.inject.Inject
+
+class ComplaintRepositoryImpl @Inject constructor(
+    private val dao: ComplaintDao,
+    private val firestore: FirebaseFirestore
+) : ComplaintRepository {
+
+    override fun getComplaints(): Flow<List<ComplaintEntity>> = dao.getAllComplaints()
+
+    override suspend fun addComplaint(complaint: ComplaintEntity, isOnline: Boolean) {
+        dao.insertComplaint(complaint)
+        if (isOnline) {
+            firestore.collection("complaints").add(
+                ComplaintRemote(
+                    title = complaint.title,
+                    description = complaint.description,
+                    photoUrl = complaint.photoUrl,
+                    timestamp = complaint.timestamp
+                )
+            ).await()
+        }
+    }
+}
