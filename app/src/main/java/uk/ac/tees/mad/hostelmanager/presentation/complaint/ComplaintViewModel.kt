@@ -1,6 +1,8 @@
 package uk.ac.tees.mad.hostelmanager.presentation.complaint
 
 import android.app.Application
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.cloudinary.Cloudinary
@@ -14,6 +16,7 @@ import uk.ac.tees.mad.hostelmanager.domain.repository.ComplaintRepository
 import uk.ac.tees.mad.hostelmanager.utils.NetworkUtils
 import uk.ac.tees.mad.hostelmanager.data.mappers.toEntity
 import uk.ac.tees.mad.hostelmanager.data.mappers.toDomain
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,6 +27,13 @@ class ComplaintViewModel @Inject constructor(
 
     private val _complaints = MutableStateFlow<List<Complaint>>(emptyList())
     val complaints: StateFlow<List<Complaint>> = _complaints
+
+    private val cloudinaryConfig = hashMapOf(
+        "cloud_name" to "dn8ycjojw",
+        "api_key" to "281678982458183",
+        "api_secret" to "77nO2JN3hkGXB-YgGZuJOqXcA4Q"
+    )
+    private val cloudinary = Cloudinary(cloudinaryConfig)
 
     init {
         fetchComplaints()
@@ -37,33 +47,69 @@ class ComplaintViewModel @Inject constructor(
         }
     }
 
-    fun fileComplaint(title: String, description: String, photoUrl: String?) {
+    fun submitComplaint(
+        context: Context,
+        title: String,
+        description: String,
+        imageUri: Uri?,
+        onSuccess: () -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                var photoUrl: String? = null
+
+                if (imageUri != null) {
+                    val file = getFileFromUri(context, imageUri)
+                    if (file != null) {
+                        Thread {
+                            try {
+                                val config = hashMapOf(
+                                    "cloud_name" to "dn8ycjojw",
+                                    "api_key" to "281678982458183",
+                                    "api_secret" to "77nO2JN3hkGXB-YgGZuJOqXcA4Q"
+                                )
+                                val cloudinary = Cloudinary(config)
+                                val result = cloudinary.uploader().upload(file.absolutePath, ObjectUtils.emptyMap())
+                                photoUrl = result["secure_url"].toString()
+
+                                // File complaint after upload
+                                fileComplaint(title, description, photoUrl)
+                                onSuccess()
+                            } catch (e: Exception) {
+                                onError(e)
+                            }
+                        }.start()
+                    } else {
+                        onError(Exception("Failed to read image"))
+                    }
+                } else {
+                    fileComplaint(title, description, null)
+                    onSuccess()
+                }
+            } catch (e: Exception) {
+                onError(e)
+            }
+        }
+    }
+
+
+    private fun fileComplaint(title: String, description: String, photoUrl: String?) {
         val isOnline = NetworkUtils.isOnline(getApplication())
         viewModelScope.launch {
             val complaint = Complaint(title = title, description = description, photoUrl = photoUrl)
             repository.addComplaint(complaint.toEntity(), isOnline)
         }
     }
-
-    fun uploadImageToCloudinary(
-        filePath: String,
-        onSuccess: (String) -> Unit,
-        onError: (Exception) -> Unit
-    ) {
-        val config = hashMapOf(
-            "cloud_name" to "dn8ycjojw",
-            "api_key" to "281678982458183",
-            "api_secret" to "77nO2JN3hkGXB-YgGZuJOqXcA4Q"
-        )
-
-        val cloudinary = Cloudinary(config)
-        Thread {
-            try {
-                val result = cloudinary.uploader().upload(filePath, ObjectUtils.emptyMap())
-                onSuccess(result["secure_url"].toString())
-            } catch (e: Exception) {
-                onError(e)
-            }
-        }.start()
+    fun getFileFromUri(context: Context, uri: Uri): File? {
+        return try {
+            val inputStream = context.contentResolver.openInputStream(uri) ?: return null
+            val tempFile = File.createTempFile("upload", ".jpg", context.cacheDir)
+            tempFile.outputStream().use { output -> inputStream.copyTo(output) }
+            tempFile
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 }

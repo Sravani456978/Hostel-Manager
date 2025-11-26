@@ -1,10 +1,12 @@
 package uk.ac.tees.mad.hostelmanager.presentation.complaint
 
 import android.Manifest
+import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -16,11 +18,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toFile
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import uk.ac.tees.mad.hostelmanager.presentation.complaint.ComplaintViewModel
+import uk.ac.tees.mad.hostelmanager.ui.theme.PrimaryBlue
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,19 +39,16 @@ fun ComplaintScreen(
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var uploading by remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
     // Camera launcher
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview()
-    ) { bitmap ->
-        // Save bitmap locally if required
-    }
+    ) { /* handle bitmap if needed */ }
 
     // Gallery launcher
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        imageUri = uri
-    }
+    ) { uri: Uri? -> imageUri = uri }
 
     // Permissions launcher
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -58,7 +61,14 @@ fun ComplaintScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("File a Complaint") })
+            TopAppBar(
+                title = {
+                    Text(
+                        "File a Complaint",
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            )
         }
     ) { padding ->
         Column(
@@ -66,74 +76,118 @@ fun ComplaintScreen(
                 .padding(padding)
                 .padding(16.dp)
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            OutlinedTextField(
-                value = title,
-                onValueChange = { title = it },
-                label = { Text("Complaint Title") },
+            // Complaint Title
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                elevation = CardDefaults.cardElevation(4.dp),
                 modifier = Modifier.fillMaxWidth()
-            )
-
-            OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
-                label = { Text("Description") },
-                modifier = Modifier.fillMaxWidth(),
-                maxLines = 5
-            )
-
-            // Image preview
-            if (imageUri != null) {
-                Image(
-                    painter = rememberAsyncImagePainter(imageUri),
-                    contentDescription = null,
+            ) {
+                OutlinedTextField(
+                    value = title,
+                    onValueChange = { title = it },
+                    label = { Text("Complaint Title") },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp),
-                    contentScale = ContentScale.Crop
+                        .padding(12.dp)
                 )
             }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+            // Description
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                elevation = CardDefaults.cardElevation(4.dp),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Button(onClick = {
-                    permissionLauncher.launch(arrayOf(Manifest.permission.CAMERA))
-                }) {
-                    Icon(Icons.Default.AddAPhoto, contentDescription = null)
-                    Spacer(Modifier.width(8.dp))
-                    Text("Camera")
-                }
+                OutlinedTextField(
+                    value = description,
+                    onValueChange = { description = it },
+                    label = { Text("Description") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    maxLines = 5
+                )
+            }
 
-                Button(onClick = { galleryLauncher.launch("image/*") }) {
-                    Text("Gallery")
+            // Image picker card
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                elevation = CardDefaults.cardElevation(4.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.padding(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    if (imageUri != null) {
+                        Image(
+                            painter = rememberAsyncImagePainter(imageUri),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(180.dp)
+                                .background(Color.LightGray, RoundedCornerShape(12.dp)),
+                            contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(150.dp)
+                                .background(Color(0xFFF0F0F0), RoundedCornerShape(12.dp)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.AddAPhoto,
+                                contentDescription = null,
+                                tint = Color.Gray,
+                                modifier = Modifier.size(48.dp)
+                            )
+                        }
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        OutlinedButton(onClick = {
+                            permissionLauncher.launch(arrayOf(Manifest.permission.CAMERA))
+                        }) {
+                            Icon(Icons.Default.AddAPhoto, contentDescription = null)
+                            Spacer(Modifier.width(6.dp))
+                            Text("Camera")
+                        }
+
+                        OutlinedButton(onClick = { galleryLauncher.launch("image/*") }) {
+                            Text("Gallery")
+                        }
+                    }
                 }
             }
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(12.dp))
 
+            // Submit Button
             Button(
                 onClick = {
                     if (title.isNotEmpty() && description.isNotEmpty()) {
                         uploading = true
-                        if (imageUri != null) {
-                            val filePath = imageUri!!.toFile().absolutePath
-                            viewModel.uploadImageToCloudinary(
-                                filePath,
-                                onSuccess = { url ->
-                                    viewModel.fileComplaint(title, description, url)
-                                    uploading = false
-                                    onSubmitSuccess()
-                                },
-                                onError = { uploading = false }
-                            )
-                        } else {
-                            viewModel.fileComplaint(title, description, null)
-                            uploading = false
-                            onSubmitSuccess()
-                        }
+                        viewModel.submitComplaint(
+                            context = context,
+                            title = title,
+                            description = description,
+                            imageUri = imageUri,
+                            onSuccess = {
+                                uploading = false
+                                onSubmitSuccess()
+                            },
+                            onError = {
+                                uploading = false
+                            }
+                        )
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -154,3 +208,5 @@ fun ComplaintScreen(
         }
     }
 }
+
+
