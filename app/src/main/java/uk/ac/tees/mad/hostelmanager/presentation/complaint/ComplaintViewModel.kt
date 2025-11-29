@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.cloudinary.Cloudinary
 import com.cloudinary.utils.ObjectUtils
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,11 +17,13 @@ import uk.ac.tees.mad.hostelmanager.domain.repository.ComplaintRepository
 import uk.ac.tees.mad.hostelmanager.utils.NetworkUtils
 import uk.ac.tees.mad.hostelmanager.data.mappers.toEntity
 import uk.ac.tees.mad.hostelmanager.data.mappers.toDomain
+import uk.ac.tees.mad.hostelmanager.presentation.auth.AuthViewModel
 import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class ComplaintViewModel @Inject constructor(
+    private val auth: FirebaseAuth,
     private val repository: ComplaintRepository,
     application: Application
 ) : AndroidViewModel(application) {
@@ -73,7 +76,6 @@ class ComplaintViewModel @Inject constructor(
                                 val result = cloudinary.uploader().upload(file.absolutePath, ObjectUtils.emptyMap())
                                 photoUrl = result["secure_url"].toString()
 
-                                // File complaint after upload
                                 fileComplaint(title, description, photoUrl)
                                 onSuccess()
                             } catch (e: Exception) {
@@ -97,7 +99,7 @@ class ComplaintViewModel @Inject constructor(
     private fun fileComplaint(title: String, description: String, photoUrl: String?) {
         val isOnline = NetworkUtils.isOnline(getApplication())
         viewModelScope.launch {
-            val complaint = Complaint(title = title, description = description, photoUrl = photoUrl)
+            val complaint = Complaint(title = title, description = description, photoUrl = photoUrl, status = "unresolved", userId = auth.currentUser?.uid ?: "")
             repository.addComplaint(complaint.toEntity(), isOnline)
         }
     }

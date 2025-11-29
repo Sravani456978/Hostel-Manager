@@ -9,7 +9,9 @@ fun Complaint.toEntity() = ComplaintEntity(
     title = title,
     description = description,
     photoUrl = photoUrl,
-    timestamp = timestamp
+    timestamp = timestamp,
+    status = status,
+    userId = userId
 )
 
 fun ComplaintEntity.toDomain() = Complaint(
@@ -17,19 +19,25 @@ fun ComplaintEntity.toDomain() = Complaint(
     title = title,
     description = description,
     photoUrl = photoUrl,
-    timestamp = timestamp
+    timestamp = timestamp,
+    status = status,
+    userId = userId
 )
 
 fun Complaint.toRemote() = ComplaintRemote(
     title = title,
     description = description,
     photoUrl = photoUrl,
-    timestamp = timestamp
+    timestamp = timestamp,
+    status = status,
+    userId = userId
 )
 
 fun ComplaintRemote.toDomain() = Complaint(
     title = title,
     description = description,
     photoUrl = photoUrl,
-    timestamp = timestamp
+    timestamp = timestamp,
+    status = status,
+    userId = userId
 )

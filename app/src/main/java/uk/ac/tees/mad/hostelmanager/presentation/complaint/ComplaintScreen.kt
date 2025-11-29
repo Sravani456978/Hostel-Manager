@@ -2,6 +2,7 @@ package uk.ac.tees.mad.hostelmanager.presentation.complaint
 
 import android.Manifest
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toFile
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import uk.ac.tees.mad.hostelmanager.presentation.complaint.ComplaintViewModel
@@ -40,17 +42,22 @@ fun ComplaintScreen(
     var uploading by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
-    // Camera launcher
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview()
-    ) { /* handle bitmap if needed */ }
+    ) { bitmap ->
+        if (bitmap != null) {
+            val file = File(context.cacheDir, "temp_image.jpg")
+            file.outputStream().use { outputStream ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            }
+            imageUri = file.toUri()
+        }
+    }
 
-    // Gallery launcher
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? -> imageUri = uri }
 
-    // Permissions launcher
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { perms ->
@@ -78,7 +85,6 @@ fun ComplaintScreen(
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Complaint Title
             Card(
                 shape = RoundedCornerShape(16.dp),
                 elevation = CardDefaults.cardElevation(4.dp),
@@ -94,7 +100,6 @@ fun ComplaintScreen(
                 )
             }
 
-            // Description
             Card(
                 shape = RoundedCornerShape(16.dp),
                 elevation = CardDefaults.cardElevation(4.dp),
@@ -111,7 +116,6 @@ fun ComplaintScreen(
                 )
             }
 
-            // Image picker card
             Card(
                 shape = RoundedCornerShape(16.dp),
                 elevation = CardDefaults.cardElevation(4.dp),
@@ -170,7 +174,6 @@ fun ComplaintScreen(
 
             Spacer(Modifier.height(12.dp))
 
-            // Submit Button
             Button(
                 onClick = {
                     if (title.isNotEmpty() && description.isNotEmpty()) {

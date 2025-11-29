@@ -24,7 +24,9 @@ class ComplaintRepositoryImpl @Inject constructor(
                     title = complaint.title,
                     description = complaint.description,
                     photoUrl = complaint.photoUrl,
-                    timestamp = complaint.timestamp
+                    timestamp = complaint.timestamp,
+                    status = complaint.status,
+                    userId = complaint.userId
                 )
             ).await()
         }

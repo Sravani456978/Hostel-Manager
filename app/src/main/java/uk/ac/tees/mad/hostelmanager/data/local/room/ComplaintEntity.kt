@@ -9,5 +9,7 @@ data class ComplaintEntity(
     val title: String,
     val description: String,
     val photoUrl: String? = null,
-    val timestamp: Long
+    val timestamp: Long,
+    val status: String = "unresolved",
+    val userId: String
 )
