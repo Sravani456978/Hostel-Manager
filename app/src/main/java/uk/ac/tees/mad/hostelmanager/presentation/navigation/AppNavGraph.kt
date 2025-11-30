@@ -38,9 +38,9 @@ fun AppNavGraph(navController: NavHostController, onGoogleSignInClick: () -> Uni
 
 
         composable(Screen.Menu.route) { MessMenuScreen(navController) }
-       composable(Screen.FileComplaint.route) { ComplaintScreen(onSubmitSuccess = {
-           navController.popBackStack()
-       }) }
+       composable(Screen.FileComplaint.route) {
+           ComplaintScreen(navController = navController)
+       }
         /*
 
 composable(Screen.ComplaintStatus.route) { ComplaintStatusScreen(navController) }

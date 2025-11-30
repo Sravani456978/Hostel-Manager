@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -25,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toFile
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import uk.ac.tees.mad.hostelmanager.presentation.complaint.ComplaintViewModel
 import uk.ac.tees.mad.hostelmanager.ui.theme.PrimaryBlue
@@ -34,7 +37,7 @@ import java.io.File
 @Composable
 fun ComplaintScreen(
     viewModel: ComplaintViewModel = hiltViewModel(),
-    onSubmitSuccess: () -> Unit
+    navController: NavController
 ) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
@@ -184,11 +187,14 @@ fun ComplaintScreen(
                             description = description,
                             imageUri = imageUri,
                             onSuccess = {
+                                Log.d("ComplaintScreen", "Complaint submitted successfully")
+                                Toast.makeText(context, "Complaint submitted successfully", Toast.LENGTH_SHORT).show()
                                 uploading = false
-                                onSubmitSuccess()
+                                navController.popBackStack()
                             },
-                            onError = {
+                            onError = { error->
                                 uploading = false
+                                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
                             }
                         )
                     }
