@@ -38,6 +38,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import uk.ac.tees.mad.hostelmanager.R
 import uk.ac.tees.mad.hostelmanager.domain.model.MenuItem
+import uk.ac.tees.mad.hostelmanager.presentation.navigation.BottomNavBar
 import uk.ac.tees.mad.hostelmanager.presentation.navigation.Screen
 import uk.ac.tees.mad.hostelmanager.ui.theme.*
 
@@ -62,9 +63,9 @@ fun MessMenuScreen(
                 )
             }
         },
-//        bottomBar = {
-//            BottomNavBar(navController = navController)
-//        }
+        bottomBar = {
+            BottomNavBar(navController = navController)
+        }
     ) { innerPadding ->
 
         Column(

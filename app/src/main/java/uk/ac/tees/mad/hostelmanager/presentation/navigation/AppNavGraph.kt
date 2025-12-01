@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import uk.ac.tees.mad.hostelmanager.presentation.auth.AuthScreen
 import uk.ac.tees.mad.hostelmanager.presentation.complaint.ComplaintScreen
 import uk.ac.tees.mad.hostelmanager.presentation.menu.MessMenuScreen
+import uk.ac.tees.mad.hostelmanager.presentation.rules.HostelRulesScreen
 import uk.ac.tees.mad.hostelmanager.presentation.splash.SplashScreen
 
 sealed class Screen(val route: String) {
@@ -41,11 +42,12 @@ fun AppNavGraph(navController: NavHostController, onGoogleSignInClick: () -> Uni
        composable(Screen.FileComplaint.route) {
            ComplaintScreen(navController = navController)
        }
+        composable(Screen.Rules.route) { HostelRulesScreen(navController) }
+
         /*
 
 composable(Screen.ComplaintStatus.route) { ComplaintStatusScreen(navController) }
 composable(Screen.MyComplaints.route) { MyComplaintsScreen(navController) }
-composable(Screen.Rules.route) { HostelRulesScreen(navController) }
 composable(Screen.Profile.route) { ProfileScreen(navController) }
 */
     }
