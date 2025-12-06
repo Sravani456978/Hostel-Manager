@@ -1,6 +1,7 @@
 package uk.ac.tees.mad.hostelmanager.presentation.profile
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -19,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -33,10 +35,18 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val profileState by viewModel.profile.collectAsState()
-
+    var loading by remember { mutableStateOf(false) }
+    val context = LocalContext.current
     val galleryLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            //uri?.let { viewModel.updateProfilePhoto(it) }
+            uri?.let {
+                loading = true
+                viewModel.updateProfilePhoto(it, onPhotoUploaded = {
+                loading = false
+            }, onPhotoUploadFailed = {
+                loading = false
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            }) }
         }
 
     Scaffold(
@@ -58,24 +68,37 @@ fun ProfileScreen(
                 modifier = Modifier.size(140.dp),
                 contentAlignment = Alignment.BottomEnd
             ) {
-                AsyncImage(
-                    model = profileState.photoUrl,
-                    contentDescription = "Profile Photo",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(140.dp)
-                        .clip(CircleShape)
-                        .background(Color.White)
-                )
+                if (loading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = AccentOrange,
+                        strokeWidth = 2.dp
+                    )
+                }
+                else {
+                    AsyncImage(
+                        model = profileState.photoUrl,
+                        contentDescription = "Profile Photo",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(140.dp)
+                            .clip(CircleShape)
+                            .background(Color.White)
+                    )
 
-                IconButton(
-                    onClick = { galleryLauncher.launch("image/*") },
-                    modifier = Modifier
-                        .size(36.dp)
-                        .clip(CircleShape)
-                        .background(AccentOrange)
-                ) {
-                    Icon(Icons.Default.Edit, contentDescription = "Edit Photo", tint = Color.White)
+                    IconButton(
+                        onClick = { galleryLauncher.launch("image/*") },
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(CircleShape)
+                            .background(AccentOrange)
+                    ) {
+                        Icon(
+                            Icons.Default.Edit,
+                            contentDescription = "Edit Photo",
+                            tint = Color.White
+                        )
+                    }
                 }
             }
 
@@ -95,7 +118,7 @@ fun ProfileScreen(
                     ),
                     trailingIcon = {
                         IconButton(onClick = {
-                            //viewModel.updateName(newName)
+                            viewModel.updateName(newName)
                             editingName = false
                         }) {
                             Icon(Icons.Default.Edit, contentDescription = "Save Name", tint = AccentOrange)
@@ -143,10 +166,10 @@ fun ProfileScreen(
                 navController.navigate(Screen.ComplaintStatus.route)
             }
             ProfileActionButton("Logout") {
-//                viewModel.logout()
-//                navController.navigate(Screen.Login.route) {
-//                    popUpTo(0)
-//                }
+                viewModel.logout()
+                navController.navigate(Screen.Auth.route) {
+                    popUpTo(0)
+                }
             }
         }
     }
