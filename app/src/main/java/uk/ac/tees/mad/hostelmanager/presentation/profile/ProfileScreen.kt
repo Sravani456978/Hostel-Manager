@@ -29,6 +29,7 @@ import uk.ac.tees.mad.hostelmanager.presentation.navigation.BottomNavBar
 import uk.ac.tees.mad.hostelmanager.presentation.navigation.Screen
 import uk.ac.tees.mad.hostelmanager.ui.theme.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     navController: NavController,
@@ -51,7 +52,21 @@ fun ProfileScreen(
 
     Scaffold(
         contentWindowInsets = WindowInsets(0),
-        bottomBar = { BottomNavBar(navController = navController) }
+        bottomBar = { BottomNavBar(navController = navController) },
+        topBar = {
+            TopAppBar(
+                title = { Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "Profile",
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                            color = Color.White
+                        ), modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                } },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
+            )
+        }
     ) { innerPadding ->
 
         Column(

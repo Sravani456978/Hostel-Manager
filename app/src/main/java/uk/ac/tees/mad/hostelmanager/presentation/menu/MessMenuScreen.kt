@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -56,11 +57,16 @@ fun MessMenuScreen(
                 onClick = { navController.navigate(Screen.FileComplaint.route) },
                 containerColor = PrimaryBlue
             ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "File Complaint",
-                    tint = Color.White
-                )
+                Row(modifier = Modifier.padding(horizontal = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,) {
+                    Icon(
+                        imageVector = Icons.Default.Create,
+                        contentDescription = "File Complaint",
+                        tint = Color.White
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text("File Complaint", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                }
             }
         },
         bottomBar = {

@@ -3,6 +3,7 @@ package uk.ac.tees.mad.hostelmanager.presentation.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.DocumentScanner
+import androidx.compose.material.icons.filled.FileCopy
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
@@ -20,6 +21,7 @@ import uk.ac.tees.mad.hostelmanager.ui.theme.PrimaryBlue
 sealed class Destination(val route: String, val title: String, val icon: ImageVector) {
     object Menu : Destination(Screen.Menu.route, "Menu", Icons.Default.List)
     object Rules : Destination(Screen.Rules.route, "Rules", Icons.Default.DocumentScanner)
+    object Complaint : Destination(Screen.ComplaintStatus.route, "Complaints", Icons.Default.FileCopy)
     object Profile : Destination(Screen.Profile.route, "Profile", Icons.Default.Person)
 }
 
@@ -28,6 +30,7 @@ fun BottomNavBar(navController: NavController) {
     val items = listOf(
         Destination.Menu,
         Destination.Rules,
+        Destination.Complaint,
         Destination.Profile
     )
 
