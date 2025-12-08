@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import uk.ac.tees.mad.hostelmanager.presentation.auth.AuthScreen
 import uk.ac.tees.mad.hostelmanager.presentation.complaint.ComplaintScreen
+import uk.ac.tees.mad.hostelmanager.presentation.complaint.MyComplaintsScreen
 import uk.ac.tees.mad.hostelmanager.presentation.complaints.ComplaintStatusScreen
 import uk.ac.tees.mad.hostelmanager.presentation.menu.MessMenuScreen
 import uk.ac.tees.mad.hostelmanager.presentation.profile.ProfileScreen
@@ -47,9 +48,6 @@ fun AppNavGraph(navController: NavHostController, onGoogleSignInClick: () -> Uni
         composable(Screen.Rules.route) { HostelRulesScreen(navController) }
         composable(Screen.Profile.route) { ProfileScreen(navController) }
         composable(Screen.ComplaintStatus.route) { ComplaintStatusScreen(navController) }
-
-        /*
         composable(Screen.MyComplaints.route) { MyComplaintsScreen(navController) }
-        */
     }
 }

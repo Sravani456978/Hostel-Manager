@@ -6,5 +6,5 @@ data class ComplaintRemote(
     val photoUrl: String? = null,
     val timestamp: Long = System.currentTimeMillis(),
     val status: String = "unresolved",
-    val userId: String
+    val userId: String = ""
 )

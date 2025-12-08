@@ -12,7 +12,10 @@ import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uk.ac.tees.mad.hostelmanager.domain.model.Complaint
@@ -32,6 +35,15 @@ class ComplaintViewModel @Inject constructor(
 
     private val _complaints = MutableStateFlow<List<Complaint>>(emptyList())
     val complaints: StateFlow<List<Complaint>> = _complaints
+    val myComplaints: StateFlow<List<Complaint>> = _complaints.map { complaints ->
+        complaints.filter { it.userId == auth.currentUser?.uid.orEmpty() }
+            .sortedByDescending { it.timestamp }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
+
 
     private val cloudinaryConfig = hashMapOf(
         "cloud_name" to "dn8ycjojw",
@@ -46,11 +58,22 @@ class ComplaintViewModel @Inject constructor(
 
     private fun fetchComplaints() {
         viewModelScope.launch {
-            repository.getComplaints().collect { list ->
-                _complaints.value = list.map { it.toDomain() }
+            val isOnline = NetworkUtils.isOnline(getApplication())
+
+            try {
+                if (isOnline) {
+                    repository.syncComplaints()
+                }
+
+                repository.getComplaints().collect { list ->
+                    _complaints.value = list.map { it.toDomain() }
+                }
+            } catch (e: Exception) {
+                Log.e("ComplaintViewModel", "Error fetching complaints: ${e.message}", e)
             }
         }
     }
+
 
     fun submitComplaint(
         context: Context,

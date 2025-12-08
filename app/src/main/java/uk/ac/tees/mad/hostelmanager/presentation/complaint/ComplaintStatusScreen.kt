@@ -22,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import uk.ac.tees.mad.hostelmanager.domain.model.Complaint
+import uk.ac.tees.mad.hostelmanager.presentation.common.ComplaintStatusCard
 import uk.ac.tees.mad.hostelmanager.presentation.complaint.ComplaintViewModel
 import uk.ac.tees.mad.hostelmanager.presentation.navigation.BottomNavBar
 import uk.ac.tees.mad.hostelmanager.ui.theme.*
@@ -83,58 +84,3 @@ fun ComplaintStatusScreen(
     }
 }
 
-@Composable
-fun ComplaintStatusCard(complaint: Complaint) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.95f)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = complaint.title,
-                style = MaterialTheme.typography.titleMedium.copy(
-                    color = PrimaryBlue
-                )
-            )
-
-            Spacer(modifier = Modifier.height(6.dp))
-
-            if (!complaint.description.isNullOrEmpty()) {
-                Text(
-                    text = complaint.description,
-                    style = MaterialTheme.typography.bodyMedium.copy(color = Color.DarkGray)
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-            }
-
-            if (!complaint.photoUrl.isNullOrEmpty()) {
-                AsyncImage(
-                    model = complaint.photoUrl,
-                    contentDescription = "Complaint Image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(160.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-            }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "Status: ${complaint.status}",
-                    style = MaterialTheme.typography.bodySmall.copy(color = AccentOrange)
-                )
-                Text(
-                    text = SimpleDateFormat("hh:mm a, dd/MM/yyyy").format(complaint.timestamp),
-                    style = MaterialTheme.typography.bodySmall.copy(color = Color.Gray)
-                )
-            }
-        }
-    }
-}
