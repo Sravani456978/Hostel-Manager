@@ -31,10 +31,11 @@ class ProfileViewModel @Inject constructor(
     private val auth = FirebaseAuth.getInstance()
 
     private val cloudinaryConfig = hashMapOf(
-        "cloud_name" to "dn8ycjojw",
-        "api_key" to "281678982458183",
-        "api_secret" to "77nO2JN3hkGXB-YgGZuJOqXcA4Q"
+        "cloud_name" to "dg0jrmslo",
+        "api_key" to "638934796977661",
+        "api_secret" to "gCDYjD1uIz9JFS4feizt_jnKImM"
     )
+
     private val cloudinary = Cloudinary(cloudinaryConfig)
 
     private val _profile = MutableStateFlow(Profile("", "", ""))

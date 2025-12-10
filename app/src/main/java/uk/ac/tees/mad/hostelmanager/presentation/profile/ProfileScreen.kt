@@ -21,7 +21,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -43,11 +47,12 @@ fun ProfileScreen(
             uri?.let {
                 loading = true
                 viewModel.updateProfilePhoto(it, onPhotoUploaded = {
-                loading = false
-            }, onPhotoUploadFailed = {
-                loading = false
-                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-            }) }
+                    loading = false
+                }, onPhotoUploadFailed = {
+                    loading = false
+                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                })
+            }
         }
 
     Scaffold(
@@ -55,15 +60,17 @@ fun ProfileScreen(
         bottomBar = { BottomNavBar(navController = navController) },
         topBar = {
             TopAppBar(
-                title = { Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = "Profile",
-                        style = MaterialTheme.typography.headlineMedium.copy(
-                            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                            color = Color.White
-                        ), modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                } },
+                title = {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = "Profile",
+                            style = MaterialTheme.typography.headlineMedium.copy(
+                                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                                color = Color.White
+                            ), modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
             )
         }
@@ -89,8 +96,7 @@ fun ProfileScreen(
                         color = AccentOrange,
                         strokeWidth = 2.dp
                     )
-                }
-                else {
+                } else {
                     AsyncImage(
                         model = profileState.photoUrl,
                         contentDescription = "Profile Photo",
@@ -136,7 +142,11 @@ fun ProfileScreen(
                             viewModel.updateName(newName)
                             editingName = false
                         }) {
-                            Icon(Icons.Default.Edit, contentDescription = "Save Name", tint = AccentOrange)
+                            Icon(
+                                Icons.Default.Edit,
+                                contentDescription = "Save Name",
+                                tint = AccentOrange
+                            )
                         }
                     }
                 )
@@ -175,7 +185,11 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(40.dp))
 
             ProfileActionButton("My Complaints") {
-                navController.navigate(Screen.MyComplaints.route)
+                if (profileState.name.isNotEmpty()) {
+                    navController.navigate(Screen.MyComplaints.passName(profileState.name))
+                } else {
+                    navController.navigate(Screen.MyComplaints.route)
+                }
             }
             ProfileActionButton("Complaint Status") {
                 navController.navigate(Screen.ComplaintStatus.route)
@@ -186,6 +200,12 @@ fun ProfileScreen(
                     popUpTo(0)
                 }
             }
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                "ℹ️ To create an instant complaint press any volume key",
+                style = MaterialTheme.typography.bodyLarge.copy(color = Color.White),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
         }
     }
 }
@@ -201,5 +221,150 @@ fun ProfileActionButton(text: String, onClick: () -> Unit) {
         shape = RoundedCornerShape(12.dp)
     ) {
         Text(text = text, color = Color.White)
+    }
+}
+
+@Preview(showBackground = true, name = "Hostel Manager – Profile Screen")
+@Composable
+fun ProfileScreenPreview() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(Color(0xFF3F51B5), Color(0xFF64B5F6))
+                )
+            )
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // Top bar
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)
+                .background(Color.Transparent),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                "Profile",
+                color = Color.White,
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        Spacer(Modifier.height(40.dp))
+
+        // Profile Picture
+        Box(
+            modifier = Modifier.size(140.dp),
+            contentAlignment = Alignment.BottomEnd
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(140.dp)
+                    .clip(CircleShape)
+                    .background(Color.White),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    "JD",
+                    color = Color(0xFF3F51B5),
+                    fontSize = 56.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            IconButton(
+                onClick = {},
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xFFFF6D00))
+            ) {
+                Icon(
+                    Icons.Default.Edit,
+                    contentDescription = "Edit Photo",
+                    tint = Color.White
+                )
+            }
+        }
+
+        Spacer(Modifier.height(24.dp))
+
+        // Name
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.clickable { }
+        ) {
+            Text(
+                "John Doe",
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            Spacer(Modifier.width(12.dp))
+            Icon(
+                Icons.Default.Edit,
+                contentDescription = "Edit Name",
+                tint = Color(0xFFFF6D00),
+                modifier = Modifier.size(20.dp)
+            )
+        }
+
+        Spacer(Modifier.height(12.dp))
+
+        Text(
+            "john.doe@tees.ac.uk",
+            fontSize = 18.sp,
+            color = Color.White.copy(alpha = 0.9f)
+        )
+
+        Spacer(Modifier.height(60.dp))
+
+        // Action Buttons
+        Button(
+            onClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF6D00)),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Text("My Complaints", color = Color.White)
+        }
+
+        Button(
+            onClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF6D00)),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Text("Complaint Status", color = Color.White)
+        }
+
+        Button(
+            onClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE53935)),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Text("Logout", color = Color.White)
+        }
+
+        Spacer(Modifier.height(32.dp))
+
+        Text(
+            "To create an instant complaint press any volume key",
+            color = Color.White,
+            fontSize = 14.sp,
+            modifier = Modifier.padding(horizontal = 32.dp),
+            textAlign = TextAlign.Center
+        )
     }
 }

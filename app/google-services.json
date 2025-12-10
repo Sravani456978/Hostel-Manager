@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "240112296671",
-    "project_id": "hostel-manager-70b47",
-    "storage_bucket": "hostel-manager-70b47.firebasestorage.app"
+    "project_number": "123926529874",
+    "project_id": "hostelmanager-5d648",
+    "storage_bucket": "hostelmanager-5d648.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:240112296671:android:7c6000fe7cb5fc7a18bf6a",
+        "mobilesdk_app_id": "1:123926529874:android:29d91a03ec992478bedc8b",
         "android_client_info": {
           "package_name": "uk.ac.tees.mad.hostelmanager"
         }
       },
       "oauth_client": [
         {
-          "client_id": "240112296671-tr9b4i03s658bb9bm0dq244c43fgusl9.apps.googleusercontent.com",
+          "client_id": "123926529874-p5p3jlolfrioi7uv7v8mi6smqjrig188.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "uk.ac.tees.mad.hostelmanager",
-            "certificate_hash": "ed01cbba081b0aa35fa5e68bd87c1c0139c05607"
+            "certificate_hash": "083a5a6bd2cc92e226064bbf34318c0ab0f9ad51"
           }
         },
         {
-          "client_id": "240112296671-jchm8elqacfo99etoa906bapnq75a5cf.apps.googleusercontent.com",
+          "client_id": "123926529874-13lnup7eo0l5rjns6bja14vfm9ce5q5p.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBX-WcJ7_sTUf1UcCCbc8AE1LBnKsUSwsg"
+          "current_key": "AIzaSyByYejHcvyehLoN-BaoYDDTzQT6baCn1kE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "240112296671-jchm8elqacfo99etoa906bapnq75a5cf.apps.googleusercontent.com",
+              "client_id": "123926529874-13lnup7eo0l5rjns6bja14vfm9ce5q5p.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

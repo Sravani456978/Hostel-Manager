@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -137,6 +138,70 @@ fun ExpandableDayCard(meal: MenuItem) {
                     MealRow("🍳 Breakfast", meal.breakfast.name, meal.breakfast.imageUrl)
                     MealRow("🥗 Lunch", meal.lunch.name, meal.lunch.imageUrl)
                     MealRow("🍛 Dinner", meal.dinner.name, meal.dinner.imageUrl)
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, name = "Hostel Manager – Mess Menu")
+@Composable
+fun MessMenuScreenPreview() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(Color(0xFF3F51B5), Color(0xFF64B5F6))
+                )
+            )
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Mess Menu",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+
+        Spacer(Modifier.height(24.dp))
+
+        // Sample days
+        val days = listOf("Monday", "Tuesday", "Tuesday", "Wednesday")
+
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            items(days.size) { index ->
+                var expanded by remember { mutableStateOf(index == 0) } // Monday expanded by default
+
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { expanded = !expanded },
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(6.dp)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = days[index],
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF3F51B5)
+                        )
+
+                        AnimatedVisibility(
+                            visible = expanded,
+                            enter = fadeIn() + expandVertically(),
+                            exit = fadeOut() + shrinkVertically()
+                        ) {
+                            Column(verticalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.padding(top = 12.dp)) {
+                                MealRow("Breakfast", "Poha + Tea","")
+                                MealRow("Lunch", "Dal + Rice + Sabzi","")
+                                MealRow("Dinner", "Roti + Paneer Curry","")
+                            }
+                        }
+                    }
                 }
             }
         }

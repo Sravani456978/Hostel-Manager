@@ -10,11 +10,13 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,7 +25,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.net.toFile
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -73,10 +77,14 @@ fun ComplaintScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        "File a Complaint",
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Rounded.ArrowBackIosNew, contentDescription = null, modifier = Modifier.clickable { navController.popBackStack() })
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            "File a Complaint",
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             )
         }
@@ -219,3 +227,106 @@ fun ComplaintScreen(
 }
 
 
+
+@Preview(showBackground = true, name = "Hostel Manager – Complaint Screen")
+@Composable
+fun ComplaintScreenPreview() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF5F5F5))
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        // Title Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(4.dp)
+        ) {
+            OutlinedTextField(
+                value = "Leaking Pipe in Room 204",
+                onValueChange = {},
+                label = { Text("Complaint Title") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                singleLine = true
+            )
+        }
+
+        // Description Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(4.dp)
+        ) {
+            OutlinedTextField(
+                value = "The pipe in the bathroom has been leaking for 3 days. Water is pooling on the floor and it's creating a safety hazard.",
+                onValueChange = {},
+                label = { Text("Description") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                maxLines = 5
+            )
+        }
+
+        // Image Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(4.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Fake image placeholder
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp)
+                        .background(Color(0xFFE0E0E0), RoundedCornerShape(12.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Photo of leaking pipe", color = Color.Gray, fontSize = 16.sp)
+                }
+
+                Spacer(Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    OutlinedButton(onClick = {}) {
+                        Icon(Icons.Default.AddAPhoto, contentDescription = null)
+                        Spacer(Modifier.width(6.dp))
+                        Text("Camera")
+                    }
+
+                    OutlinedButton(onClick = {}) {
+                        Text("Gallery")
+                    }
+                }
+            }
+        }
+
+        Spacer(Modifier.height(12.dp))
+
+        // Submit Button
+        Button(
+            onClick = {},
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2))
+        ) {
+            Icon(Icons.Default.Check, contentDescription = null, tint = Color.White)
+            Spacer(Modifier.width(8.dp))
+            Text("Submit Complaint", color = Color.White, fontSize = 18.sp)
+        }
+    }
+}

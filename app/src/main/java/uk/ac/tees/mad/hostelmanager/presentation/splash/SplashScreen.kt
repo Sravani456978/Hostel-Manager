@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -45,4 +46,21 @@ fun SplashScreen(
         }
     }
 
+}
+
+
+@Preview(showBackground = true, name = "Hostel Manager – Splash Screen")
+@Composable
+fun SplashScreenPreview() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painterResource(R.drawable.app_icon),
+            contentDescription = "App Logo",
+            modifier = Modifier.size(160.dp).clip(RoundedCornerShape(34.dp))
+                .shadow(5.dp)
+        )
+    }
 }

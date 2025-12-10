@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -152,3 +153,111 @@ data class InfoSection(
     val title: String,
     val items: List<String>
 )
+
+
+@Preview(showBackground = true, name = "Hostel Manager – Rules & Info")
+@Composable
+fun HostelRulesScreenPreview() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(Color(0xFF3F51B5), Color(0xFF64B5F6))
+                )
+            )
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Hostel Information",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+
+        Spacer(Modifier.height(24.dp))
+
+        val sections = listOf(
+            InfoSection(
+                title = "General Rules",
+                items = listOf(
+                    "Maintain discipline and silence in hostel premises.",
+                    "No visitors allowed inside hostel rooms.",
+                    "Respect fellow hostel members and staff.",
+                    "Keep your room and common areas clean."
+                )
+            ),
+            InfoSection(
+                title = "Timings",
+                items = listOf(
+                    "Breakfast: 7:00 AM - 9:00 AM",
+                    "Lunch: 1:00 PM - 2:30 PM",
+                    "Dinner: 8:00 PM - 9:30 PM",
+                    "Hostel Gate Closes: 10:30 PM"
+                )
+            ),
+            InfoSection(
+                title = "Contact Information",
+                items = listOf(
+                    "Warden: Mr. Oliver (Mob: +1 987 6543 210)",
+                    "Security Desk: +1 123 4567 890",
+                    "Emergency: 911"
+                )
+            )
+        )
+
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            items(sections.size) { index ->
+                var expanded by remember { mutableStateOf(index == 0) }
+
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { expanded = !expanded },
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(6.dp)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Default.Info,
+                                contentDescription = null,
+                                tint = Color(0xFF3F51B5),
+                                modifier = Modifier.size(22.dp)
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                text = sections[index].title,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF3F51B5)
+                            )
+                        }
+
+                        AnimatedVisibility(
+                            visible = expanded,
+                            enter = fadeIn() + expandVertically(),
+                            exit = fadeOut() + shrinkVertically()
+                        ) {
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.padding(top = 12.dp)
+                            ) {
+                                sections[index].items.forEach { item ->
+                                    Text(
+                                        text = "• $item",
+                                        fontSize = 14.sp,
+                                        color = Color.Black
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+

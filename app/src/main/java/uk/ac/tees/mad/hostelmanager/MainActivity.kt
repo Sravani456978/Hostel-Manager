@@ -1,6 +1,7 @@
 package uk.ac.tees.mad.hostelmanager
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,6 +18,7 @@ import com.google.android.gms.common.api.ApiException
 import dagger.hilt.android.AndroidEntryPoint
 import uk.ac.tees.mad.hostelmanager.presentation.auth.AuthViewModel
 import uk.ac.tees.mad.hostelmanager.presentation.navigation.AppNavGraph
+import uk.ac.tees.mad.hostelmanager.presentation.navigation.Screen
 import uk.ac.tees.mad.hostelmanager.ui.theme.HostelManagerTheme
 import uk.ac.tees.mad.hostelmanager.utils.NetworkUtils
 
@@ -38,7 +40,11 @@ class MainActivity : ComponentActivity() {
             }
         } catch (e: ApiException) {
             if (e.statusCode == 16) {
-                Toast.makeText(this, "No internet connection. Please try again.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "No internet connection. Please try again.",
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
                 Toast.makeText(this, "Sign-in failed: ${e.statusCode}", Toast.LENGTH_SHORT).show()
             }
@@ -67,7 +73,11 @@ class MainActivity : ComponentActivity() {
 
     private fun startGoogleSignIn() {
         if (!NetworkUtils.isOnline(this)) {
-            Toast.makeText(this, "No internet connection. Please connect and try again.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "No internet connection. Please connect and try again.",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
 
@@ -84,7 +94,32 @@ class MainActivity : ComponentActivity() {
             }
             .addOnFailureListener { e ->
                 e.printStackTrace()
-                Toast.makeText(this, "Failed to start sign-in: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Failed to start sign-in: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        return when (keyCode) {
+            KeyEvent.KEYCODE_VOLUME_UP,
+            KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                if (::navController.isInitialized) {
+                    val currentRoute = navController.currentDestination?.route
+                    if (currentRoute != Screen.Auth.route &&
+                        currentRoute != Screen.Splash.route &&
+                        currentRoute != Screen.FileComplaint.route
+                    ) {
+                        navController.navigate(Screen.FileComplaint.route) {
+                            launchSingleTop = true
+                        }
+                    }
+                }
+                true
+            }
+            else -> super.onKeyDown(keyCode, event)
+        }
     }
 }

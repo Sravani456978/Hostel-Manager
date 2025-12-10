@@ -35,8 +35,10 @@ import uk.ac.tees.mad.hostelmanager.ui.theme.LightBlue
 import uk.ac.tees.mad.hostelmanager.ui.theme.PrimaryBlue
 
 @Composable
-fun MyComplaintsScreen(navController: NavHostController,
-                       viewModel: ComplaintViewModel = hiltViewModel()
+fun MyComplaintsScreen(
+    navController: NavHostController,
+    name: String,
+    viewModel: ComplaintViewModel = hiltViewModel()
 ) {
     val complaints by viewModel.myComplaints.collectAsState()
 
@@ -51,43 +53,74 @@ fun MyComplaintsScreen(navController: NavHostController,
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            if (complaints.isEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "No complaints found",
-                        style = MaterialTheme.typography.bodyLarge.copy(color = Color.White)
-                    )
-                }
-            } else {
+            Icon(
+                Icons.Rounded.ArrowBackIosNew,
+                contentDescription = "Back",
+                modifier = Modifier
+                    .padding(top = 58.dp)
+                    .size(32.dp)
+                    .clickable { navController.popBackStack() },
+                tint = Color.White
+            )
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding)
+                        .weight(0.2f),
                 ) {
-                    Icon(Icons.Rounded.ArrowBackIosNew, contentDescription = null,
-                        modifier = Modifier.systemBarsPadding().size(32.dp).clickable{
-                            navController.popBackStack()
-                        }, tint = Color.White)
-                    Column {
+                    Icon(
+                        Icons.Rounded.ArrowBackIosNew,
+                        contentDescription = "Back",
+                        modifier = Modifier
+                            .align(Alignment.TopStart)
+                            .size(28.dp)
+                            .clickable { navController.popBackStack() }
+                            .systemBarsPadding(),
+                        tint = Color.White
+                    )
+
+                    Column(
+                        modifier = Modifier.align(Alignment.Center),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         Text(
                             text = "My Complaints",
                             style = MaterialTheme.typography.headlineMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White
-                            ),
-                            modifier = Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .systemBarsPadding()
+                            )
                         )
-                        LazyColumn(
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            items(complaints) { complaint ->
-                                ComplaintStatusCard(complaint)
-                            }
+                        Text(
+                            text = name,
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                fontWeight = FontWeight.Medium,
+                                color = Color.White.copy(alpha = 0.9f)
+                            )
+                        )
+                    }
+                }
+
+                if (complaints.isEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(0.8f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "No complaints found",
+                            style = MaterialTheme.typography.bodyLarge.copy(color = Color.White)
+                        )
+                    }
+                } else {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        modifier = Modifier.weight(0.8f)
+                    ) {
+                        items(complaints) { complaint ->
+                            ComplaintStatusCard(complaint)
                         }
                     }
                 }
